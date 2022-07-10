@@ -1,5 +1,6 @@
 import django.contrib.auth.models
 from django.db import models
+from datetime import datetime
 
 director = 'DI'
 admin = 'AD'
@@ -21,6 +22,9 @@ class Staff(models.Model):
     position = models.CharField(max_length=2, choices=POSITIONS, default=cashier)
     labor_contract = models.BigIntegerField(default=0)
 
+    def get_last_name(self):
+        return self.full_name.split()[0]
+
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
@@ -37,11 +41,35 @@ class Order(models.Model):  # наследуемся от класса Model
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product, through='ProductOrder')
 
+    def finish_order(self):
+        self.time_out = datetime.now()
+        self.complete = True
+        self.save()
+
+    def get_duration(self):
+        if self.complete:
+            return (self.time_out - self.time_in).total_seconds() // 60
+        else:
+            return (datetime.now() - self.time_in).total_seconds() // 60
+
 
 class ProductOrder(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    amount = models.IntegerField(default=1)
+    _amount = models.IntegerField(default=1, db_column='amount')
+
+    @property
+    def amount(self):
+        return self._amount
+
+    @amount.setter
+    def amount(self, value):
+        self._amount = int(value) if value > 0 else 0
+        self.save()
+
+    def product_sum(self):
+        product_price = self.product.price
+        return product_price * self.amount
 
 # # ______________________________________________________________________________________________________________________
 # # ______________________________________________________________________________________________________________________
@@ -56,15 +84,13 @@ class ProductOrder(models.Model):
 #     # Категории новостей/статей — темы, которые они отражают (спорт, политика, образование и т. д.).
 #     # Имеет единственное поле: название категории.
 #     # Поле должно быть уникальным (в определении поля необходимо написать параметр unique = True).
-#     # category_name = models.CharField(max_length=255)
-#     # category_news = models.Choices(unique=True)
-#     pass
+#     category_name = models.CharField(max_length=255, unique=True)
 #
 #
 # class Post(models.Model):
 #     author = models.ForeignKey(Author, on_delete=models.CASCADE)
 #     # поле с выбором — «статья» или «новость»;
-#     post_datetime = models.DateTimeField(auto_now_add=True)
+#     post_create_datetime = models.DateTimeField(auto_now_add=True)
 #     category = models.ManyToManyField(Category, through='PostCategory')
 #     post_title = models.CharField(max_length=255)
 #     post_text = models.TextField(default="Здесь должен быть текст вашей статьи или новости...")
@@ -82,3 +108,12 @@ class ProductOrder(models.Model):
 #     comment_text = models.TextField()
 #     comment_datetime = models.DateTimeField(auto_now_add=True)
 #     comment_rating = models.IntegerField(default=0)
+#
+#     def like(self):
+#         self.comment_rating += 1
+#         self.save()
+#
+#     def dislike(self):
+#         self.comment_rating -= 1
+#         self.save()
+
