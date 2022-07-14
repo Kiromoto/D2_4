@@ -1,4 +1,5 @@
 from models import *
+from datetime import datetime, date, time
 
 user1 = User.objects.create_user(username='UserFirst')
 user2 = User.objects.create_user(username='UserSecond')
@@ -48,5 +49,23 @@ Comment.objects.get(id=1).like()
 Comment.objects.get(id=1).like()
 Comment.objects.get(id=1).dislike()
 
+a = Author.objects.all()
+for i in a:
+    i.author_user.username
+    i.update_rating()
+    i.author_rating
 
-Author.objects.get(id=1).update_rating()
+
+a = Author.objects.order_by('-author_rating')[:1]
+for i in a:
+    i.author_rating
+    i.author_user.username
+
+p = Post.objects.order_by('-post_rating')[:1]
+for i in p:
+    i.post_create_datetime
+    i.author.author_user.username
+    i.post_rating
+    i.post_title
+    i.preview()
+
