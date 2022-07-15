@@ -39,27 +39,58 @@ Post.objects.get(id=4).post_category.add(Category.objects.get(id=3))
 
 
 
-Comment.objects.create(post=Post.objects.get(id=1), user=User.objects.get(id=2), comment_text='com1_ok!')
-Comment.objects.create(post=Post.objects.get(id=1), user=User.objects.get(id=3), comment_text='com2_ok!')
-Comment.objects.create(post=Post.objects.get(id=2), user=User.objects.get(id=4), comment_text='com3_ok!')
-Comment.objects.create(post=Post.objects.get(id=4), user=User.objects.get(id=1), comment_text='com4_ok!')
+Comment.objects.create(postComment=Post.objects.get(id=1), user=User.objects.get(id=2), comment_text='com10_ok!')
+Comment.objects.create(postComment=Post.objects.get(id=1), user=User.objects.get(id=3), comment_text='com11_ok!')
+Comment.objects.create(postComment=Post.objects.get(id=2), user=User.objects.get(id=4), comment_text='com21_ok!')
+Comment.objects.create(postComment=Post.objects.get(id=3), user=User.objects.get(id=2), comment_text='com31_ok!')
+Comment.objects.create(postComment=Post.objects.get(id=4), user=User.objects.get(id=1), comment_text='com41_ok!')
+
 
 Comment.objects.get(id=1).like()
 Comment.objects.get(id=1).like()
 Comment.objects.get(id=1).like()
 Comment.objects.get(id=1).dislike()
 
-a = Author.objects.all()
-for i in a:
-    i.author_user.username
-    i.update_rating()
-    i.author_rating
+Comment.objects.get(id=2).like()
+Comment.objects.get(id=2).dislike()
+Comment.objects.get(id=2).like()
+Comment.objects.get(id=2).like()
+Comment.objects.get(id=2).dislike()
+Comment.objects.get(id=2).like()
+Comment.objects.get(id=2).like()
+Comment.objects.get(id=2).dislike()
+Comment.objects.get(id=2).like()
+Comment.objects.get(id=2).like()
+Comment.objects.get(id=2).dislike()
 
+Comment.objects.get(id=3).like()
+Comment.objects.get(id=3).like()
+Comment.objects.get(id=3).like()
+Comment.objects.get(id=3).like()
+Comment.objects.get(id=3).like()
+Comment.objects.get(id=3).like()
+Comment.objects.get(id=3).like()
+Comment.objects.get(id=3).dislike()
+
+Comment.objects.get(id=4).dislike()
+Comment.objects.get(id=4).dislike()
+Comment.objects.get(id=4).dislike()
+Comment.objects.get(id=4).like()
+Comment.objects.get(id=4).like()
+Comment.objects.get(id=4).like()
+Comment.objects.get(id=4).like()
+Comment.objects.get(id=4).like()
+Comment.objects.get(id=4).like()
+
+al = Author.objects.all()
+for i in al:
+    i.rating_update()
+    i.author_rating
 
 a = Author.objects.order_by('-author_rating')[:1]
 for i in a:
-    i.author_rating
     i.author_user.username
+    i.author_rating
 
 p = Post.objects.order_by('-post_rating')[:1]
 for i in p:
@@ -69,3 +100,17 @@ for i in p:
     i.post_title
     i.preview()
 
+
+for i in p:
+    print(i.postComment)
+
+
+
+
+# python manage.py shell
+# from news.models import *
+# a = Author.objects.all()
+# for i in a:
+#     i.author_user.username
+#     i.update_rating()
+#     i.author_rating

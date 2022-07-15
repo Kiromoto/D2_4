@@ -23,11 +23,11 @@ class Author(models.Model):
         commR += sum_comment_rating.get('authorCommentRating')
 
         # # # суммарный рейтинг всех комментариев к статьям автора.
-        # sum_PostComment_rating = self.post_set.comment_set.postComment_set.aggregate(allCommentPostRating=models.Sum('comment_rating'))
-        # pcommR = 0
-        # pcommR += sum_PostComment_rating.get('allCommentPostRating')
+        sum_PostComment_rating = self.author_user.post.postComment_set.aggregate(allCommentPostRating=models.Sum('comment_rating'))
+        pcommR = 0
+        pcommR += sum_PostComment_rating.get('allCommentPostRating')
 
-        self.author_rating = postR * 3 + commR #+ pcommR
+        self.author_rating = postR * 3 + commR + pcommR
         self.save()
 
 
