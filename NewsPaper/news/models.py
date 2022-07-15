@@ -11,24 +11,28 @@ class Author(models.Model):
 
     def update_rating(self):
         # суммарный рейтинг каждой статьи автора умножается на 3;
-        # !!! если у автора нет постов, то выдает ошибку. Нужно проверить.
         sum_post_rating = self.post_set.aggregate(allPostRating=models.Sum('post_rating'))
         postR = 0
         postR += sum_post_rating.get('allPostRating')
 
-
-        # суммарный рейтинг всех комментариев автора;
+        # # суммарный рейтинг всех комментариев автора;
         sum_comment_rating = self.author_user.comment_set.aggregate(authorCommentRating=models.Sum('comment_rating'))
         commR = 0
         commR += sum_comment_rating.get('authorCommentRating')
 
-        # # # суммарный рейтинг всех комментариев к статьям автора.
-        sum_PostComment_rating = self.author_user.post.postComment_set.aggregate(allCommentPostRating=models.Sum('comment_rating'))
-        pcommR = 0
-        pcommR += sum_PostComment_rating.get('allCommentPostRating')
+        # # суммарный рейтинг всех комментариев к статьям автора.
+        # sum_PostComment_rating = self.comment.postComment.all().aggregate(allCommentPostRating=models.Sum('comment_rating'))
+        # s1 = self.author_user.post_set.comment_set.all().aggregate(allCommentRatingAuthorPost=models.Sum('comment_rating'))
+        # pcommR = 0
+        # pcommR += s1.get('allCommentRatingAuthorPost')
 
-        self.author_rating = postR * 3 + commR + pcommR
+        self.author_rating = postR * 3 + commR #+ pcommR
         self.save()
+
+    def test(self):
+        allcom = Comment.objects.filter(user_id=self.author_user.id)
+        return allcom.values('comment_text')
+
 
 
 class Category(models.Model):

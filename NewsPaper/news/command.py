@@ -44,7 +44,7 @@ Comment.objects.create(postComment=Post.objects.get(id=1), user=User.objects.get
 Comment.objects.create(postComment=Post.objects.get(id=2), user=User.objects.get(id=4), comment_text='com21_ok!')
 Comment.objects.create(postComment=Post.objects.get(id=3), user=User.objects.get(id=2), comment_text='com31_ok!')
 Comment.objects.create(postComment=Post.objects.get(id=4), user=User.objects.get(id=1), comment_text='com41_ok!')
-
+Comment.objects.create(postComment=Post.objects.get(id=3), user=User.objects.get(id=1), comment_text='com32_ok!')
 
 Comment.objects.get(id=1).like()
 Comment.objects.get(id=1).like()
@@ -94,12 +94,12 @@ for i in a:
 
 p = Post.objects.order_by('-post_rating')[:1]
 for i in p:
+    i
     i.post_create_datetime
     i.author.author_user.username
     i.post_rating
     i.post_title
     i.preview()
-
 
 for i in p:
     print(i.postComment)
@@ -114,3 +114,8 @@ for i in p:
 #     i.author_user.username
 #     i.update_rating()
 #     i.author_rating
+
+from news.models import *
+a1 = Author.objects.get(id=1)
+a1.author_rating
+a1.update_rating()
